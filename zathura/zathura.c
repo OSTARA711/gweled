@@ -191,11 +191,33 @@ void zathura_update_view_ppi(zathura_t* zathura) {
   }
 }
 
+/* Toolbar */
+static void cb_toolbar_open(GtkButton* UNUSED(button), gpointer data) {
+  zathura_t* zathura = data;
+
+  sc_file_chooser(zathura->ui.session, NULL, NULL, 0);
+}
+
 static bool init_ui(zathura_t* zathura) {
   if (girara_session_init(zathura->ui.session, "zathura") == false) {
     girara_error("Failed to initialize girara.");
     return false;
   }
+
+  /* main toolbar */
+  GtkWidget* toolbar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_widget_set_margin_start(toolbar, 6);
+  gtk_widget_set_margin_end(toolbar, 6);
+  gtk_widget_set_margin_top(toolbar, 6);
+  gtk_widget_set_margin_bottom(toolbar, 6);
+
+  GtkWidget* open_button = gtk_button_new_with_label(_("Open"));
+  g_signal_connect(open_button, "clicked", G_CALLBACK(cb_toolbar_open), zathura);
+
+  gtk_box_append(GTK_BOX(toolbar), open_button);
+
+  /* place toolbar above the document view */
+  gtk_box_prepend(zathura->ui.session->gtk.box, toolbar);  
 
   /* intial window icon and title */
   girara_set_window_title(zathura->ui.session, "zathura");
