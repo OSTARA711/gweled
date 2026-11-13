@@ -217,7 +217,7 @@ static bool init_ui(zathura_t* zathura) {
   gtk_box_append(GTK_BOX(toolbar), open_button);
 
   /* place toolbar above the document view */
-  gtk_box_prepend(zathura->ui.session->gtk.box, toolbar);  
+  gtk_box_prepend(zathura->ui.session->gtk.box, toolbar);
 
   /* intial window icon and title */
   girara_set_window_title(zathura->ui.session, "zathura");

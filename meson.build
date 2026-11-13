@@ -247,3 +247,27 @@ if get_option('manpages').allowed()
   subdir('doc')
 endif
 subdir('tests')
+
+# clang-format check
+clang_format = find_program('clang-format')
+git = find_program('git')
+
+tracked_c_files = run_command(
+  git,
+  'ls-files',
+  '--',
+  '*.c',
+  '*.h',
+  check: true,
+).stdout().strip().split('\n')
+
+absolute_c_files = []
+
+foreach source_file : tracked_c_files
+  absolute_c_files += join_paths(meson.project_source_root(), source_file)
+endforeach
+
+run_target(
+  'clang-format-check',
+  command: [clang_format, '--dry-run', '--Werror'] + absolute_c_files,
+)
