@@ -1,65 +1,126 @@
-zathura - a document viewer
-===========================
+# GWELED
 
-zathura is a highly customizable and functional document viewer based on the
-girara user interface library and several document libraries.
+**A GTK4 document viewer**
 
-Requirements
-------------
+GWELED is a GTK4-based document viewer derived from [Zathura](https://pwmt.org/projects/zathura/), originally developed by pwmt.org.
 
-The following dependencies are required:
+It retains Zathura's document-viewing architecture and plugin-based design while using GTK4 and a modernised Girara interface.
 
-* `gtk4` (>= 4.18)
-* `glib` (>= 2.84)
-* `girara` (>= 2026.07.07)
-* `libmagic` from file(1): for mime-type detection
-* `json-glib`
-* `sqlite3` (>= 3.25.0): sqlite3 database backend
-* `libxxhash`: file hashing
+GWELED is designed to provide a lightweight, configurable document-viewing application with support for different document formats through external plugins.
 
-The following dependencies are optional:
-* `libsynctex` from TeXLive (>= 2): SyncTeX support
-* `libseccomp`: sandbox support
+## Features
 
-For building zathura, the following dependencies are also required:
+- GTK4 graphical interface.
+- Document opening through a graphical file chooser.
+- Drag-and-drop document opening.
+- Plugin-based document format support.
+- Keyboard-oriented navigation and configurable controls inherited from Zathura.
+- Page navigation, zooming and document layout controls.
+- Persistent document state and bookmarks.
+- Optional SyncTeX integration.
+- Optional application sandboxing through seccomp and Landlock.
 
-* `meson` (>= 1.5)
-* `gettext`
-* `pkgconf`
+Document format support depends on the installed plugins. GWELED does not bundle a document-rendering backend into its core application.
 
-The following dependencies are optional build-time only dependencies:
+## Architecture
 
-* `librvsg-bin`: PNG icons
-* `Sphinx`: manpages and HTML documentation
-* `doxygen`: HTML documentation
-* `breathe`: for HTML documentation
-* `sphinx_rtd_theme`: for HTML documentation
+GWELED separates the viewer from document-format implementations.
 
-Note that `Sphinx` is needed to build the manpages. If it is not installed, the
-man pages won't be built. For building the HTML documentation, `doxygen`,
-`breathe` and `sphinx_rtd_theme` are needed in addition to `Sphinx`.
+- **GWELED:** application, GTK4 interface, document lifecycle, navigation, rendering coordination and plugin API.
+- **Girara:** user-interface support library.
+- **Document plugins:** external implementations providing format-specific document loading, rendering and related operations.
 
-The use of `libseccomp` and/or `landlock` to create a sandboxed environment is
-optional and can be disabled by configure the build system with
-`-Dseccomp=disabled` and `-Dlandlock=disabled`. The sandboxed version of zathura
-will be built into a separate binary named `zathura-sandbox`.  Strict sandbox
-mode will reduce the available functionality of zathura and provide a read only
-document viewer.
+This architecture allows document formats to be supported independently of the main application.
 
-Installation
-------------
+## Requirements
 
-To build and install zathura using meson's ninja backend:
+### Runtime and build dependencies
 
-    meson build
-    cd build
-    ninja
-    ninja install
+| Dependency | Minimum version | Purpose |
+|---|---:|---|
+| GTK4 | 4.18 | Graphical interface |
+| GLib | 2.84 | Core application facilities |
+| Girara | 2026.07.07 | User-interface library |
+| JSON-GLib | — | JSON support |
+| Cairo | — | Graphics |
+| libmagic | — | MIME-type detection |
+| SQLite | 3.35.0 | Document state database |
+| libxxhash | — | File hashing |
 
-> **Note:** The default backend for meson might vary based on the platform. Please
-refer to the meson documentation for platform specific dependencies.
+A C23-compatible compiler is required.
 
-Bugs
-----
+### Build tools
 
-Please report bugs at https://github.com/pwmt/zathura.
+- Meson 1.5 or newer
+- Ninja (when using the Ninja backend)
+- pkgconf
+- gettext
+
+### Optional dependencies
+
+| Dependency | Purpose |
+|---|---|
+| SyncTeX (`libsynctex` 2 or newer) | TeX source synchronisation |
+| libseccomp | seccomp-based sandboxing |
+| Linux Landlock support | Filesystem sandboxing |
+
+Optional documentation dependencies include Sphinx, Doxygen, Breathe and the Sphinx Read the Docs theme.
+
+## Building
+
+Configure the project:
+
+```sh
+meson setup build
+```
+
+Compile:
+
+```sh
+meson compile -C build
+```
+
+Install:
+
+```sh
+sudo meson install -C build
+```
+
+Refresh the shared-library cache where appropriate:
+
+```sh
+sudo ldconfig
+```
+
+Meson automatically selects an available build backend unless one is explicitly specified.
+
+## Plugins
+
+GWELED uses a versioned plugin interface.
+
+Current versions:
+
+- Plugin API: 8
+- Plugin ABI: 9
+
+Plugins must be built against a compatible GWELED installation. Plugins compiled for incompatible Zathura API or ABI versions cannot be assumed to work.
+
+Document-format support is provided by separately maintained plugins.
+
+## Project origins
+
+GWELED is derived from Zathura, originally developed by pwmt.org.
+
+The project retains the original upstream copyright and licensing notices. GWELED-specific modifications and original contributions are maintained separately.
+
+## Licence
+
+GWELED retains the original Zlib licence terms. See [LICENSE.md](LICENSE.md) for the complete licence text and copyright notices.
+
+## Development
+
+Source code:
+
+https://github.com/OSTARA711/gweled
+
+Bug reports and development discussions should be directed to the GWELED repository.

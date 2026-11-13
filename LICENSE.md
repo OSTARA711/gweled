@@ -1,4 +1,5 @@
 Copyright (c) 2009-2026 pwmt.org
+Copyright © 2026 Saskia Ostermann Toutatis © OSTARA-3339 AAY 00074
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
